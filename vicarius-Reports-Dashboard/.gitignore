@@ -11,3 +11,4 @@ app/scripts/test-Apps.py
 app/scripts/testtimestamp.py
 metabase/notemplate-backukp.sql
 Packager.sh
+.env
