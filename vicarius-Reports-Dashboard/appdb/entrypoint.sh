@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Set the file paths for the Docker secrets
-export POSTGRES_DB_FILE=/run/secrets/postgres_db
-export POSTGRES_USER_FILE=/run/secrets/postgres_user
-export POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+# Set environment variables directly from Docker Compose
+export POSTGRES_DB=${POSTGRES_DB}
+export POSTGRES_USER=${POSTGRES_USER}
+export POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
 # Execute the original entrypoint script with PostgreSQL as the argument
 exec docker-entrypoint.sh postgres

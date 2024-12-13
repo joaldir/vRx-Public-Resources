@@ -64,40 +64,40 @@ if [ $? -ne 0 ]; then
 fi
 
 # Initialize Docker Swarm
-docker swarm init
-if [ $? -ne 0 ]; then
-    echo "Failed to initialize Docker Swarm"
-    exit 1
-fi
+#docker swarm init
+#if [ $? -ne 0 ]; then
+#    echo "Failed to initialize Docker Swarm"
+#    exit 1
+#fi
 
 # Create a Docker registry service
 openssl req -newkey rsa:4096 -nodes -sha256 -x509 -days 365 -out certs/vicarius-vrx-reports.app.crt -keyout certs/vicarius-vrx-reports.app.key -subj "/CN=vicarius-vrx-reports.app"
 
-docker secret create registry-cert certs/vicarius-vrx-reports.app.crt
-docker secret create registry-key certs/vicarius-vrx-reports.app.key
+#docker secret create registry-cert certs/vicarius-vrx-reports.app.crt
+#docker secret create registry-key certs/vicarius-vrx-reports.app.key
 
-mkdir -p /etc/docker/certs.d/vicarius-vrx-reports.app:5000
+#mkdir -p /etc/docker/certs.d/vicarius-vrx-reports.app:5000
 
-mkdir /mnt/registry
+#mkdir /mnt/registry
 
-cp certs/vicarius-vrx-reports.app.crt /etc/docker/certs.d/vicarius-vrx-reports.app:5000/ca.crt
-cp certs/vicarius-vrx-reports.app.key /etc/docker/certs.d/vicarius-vrx-reports.app:5000/key.key
+#cp certs/vicarius-vrx-reports.app.crt /etc/docker/certs.d/vicarius-vrx-reports.app:5000/ca.crt
+#cp certs/vicarius-vrx-reports.app.key /etc/docker/certs.d/vicarius-vrx-reports.app:5000/key.key
 
-sudo systemctl restart docker
+#sudo systemctl restart docker
 
-docker service create \
-  --name registry \
-  --publish published=5000,target=5000 \
-  --secret registry-cert \
-  --secret registry-key \
-  --mount type=bind,source=/mnt/registry,destination=/var/lib/registry \
-  --env REGISTRY_HTTP_TLS_CERTIFICATE=/run/secrets/registry-cert \
-  --env REGISTRY_HTTP_TLS_KEY=/run/secrets/registry-key \
-  registry:2
+#docker service create \
+#  --name registry \
+#  --publish published=5000,target=5000 \
+#  --secret registry-cert \
+#  --secret registry-key \
+#  --mount type=bind,source=/mnt/registry,destination=/var/lib/registry \
+#  --env REGISTRY_HTTP_TLS_CERTIFICATE=/run/secrets/registry-cert \
+#  --env REGISTRY_HTTP_TLS_KEY=/run/secrets/registry-key \
+#  registry:2
 
-if [ $? -ne 0 ]; then
-    echo "Failed to create Docker registry service"
-    exit 1
-fi
+#if [ $? -ne 0 ]; then
+#    echo "Failed to create Docker registry service"
+#    exit 1
+#fi
 
 echo "Docker installation and configuration complete"

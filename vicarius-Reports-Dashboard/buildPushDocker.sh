@@ -1,6 +1,5 @@
 # Step 5: Build Docker images for each service and push to the local registry
 
-
 # Building the db service Docker image and pushing to local registry
 echo "Building the db service Docker image..."
 docker build -t localhost:5000/vrx-reports-appdb:latest ./appdb

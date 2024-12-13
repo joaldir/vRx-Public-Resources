@@ -32,14 +32,30 @@ import gc
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
+# Uso no Docker Compose
+apikey = os.getenv('API_KEY')
+organization_domain = os.getenv('DASHBOARD_ID')
+urldashboard = f"https://{organization_domain}.vicarius.cloud"
+
+# Configuração do banco de dados
+host = "appdb"
+port = "5432"
+user = os.getenv('POSTGRES_USER')
+password = os.getenv('POSTGRES_PASSWORD')
+database = os.getenv('POSTGRES_DB')
+optionalTools = os.getenv('OPTIONAL_TOOLS')
+
+tools = optionalTools.split(',') if optionalTools and ',' in optionalTools else [optionalTools]
+
+print("####################################")
+print("Variáveis de ambiente carregadas:")
+print(f"API_KEY: {apikey}")
+print(f"DASHBOARD_ID: {organization_domain}")
+print(f"POSTGRES_USER: {user}")
+print(f"POSTGRES_DB: {database}")
+print("####################################")
+
 errorList = [] 
-def read_secret(secret_name):
-    try:
-        with open(f'/run/secrets/{secret_name}', 'r') as secret_file:
-            return secret_file.read().strip()
-    except IOError:
-        print(f"Unable to read the secret: {secret_name}")
-        return None
 
 DEFAULT_QUERY_LIMIT_PER_MINUTE = 55
 
@@ -105,36 +121,6 @@ parser.add_argument('--activeVulnsTable', dest='activeVulnsTable', action='store
 parser.add_argument('-tw', '--taskWaiting', dest='tasksWaitingreport', action='store_true', help='Task Waiting Reports')
 
 args = parser.parse_args()
-
-# Get the Credentials
-
-apikey = read_secret('api_key')
-organization_domain = read_secret('dashboard_id')
-urldashboard = f"https://{organization_domain}.vicarius.cloud"
-
-#Initialization Postgresql
-host = "appdb"
-port = "5432"
-user = read_secret('postgres_user')
-password = read_secret('postgres_password')
-database = read_secret('postgres_db')
-optionalTools = read_secret('optional_tools')
-
-substring = ","
-if substring in optionalTools:
-    tools = optionalTools.split(',')
-else:
-    tools = optionalTools
-print("####################################")
-print("####################################")
-print("####################################")
-print("Beginning a new Run")
-print("####################################")
-print("####################################")
-print("####################################")
-
-print (f"Dashboard URL is ", {urldashboard})
-
 
 statepath = "/usr/src/app/reports/state.json"
 if os.path.exists(statepath):
