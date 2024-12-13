@@ -2,28 +2,28 @@ FROM python:3.12.2-bookworm
 
 WORKDIR /usr/src/app
 
-# Copy only the requirements.txt initially
-ADD ./requirements.txt /usr/src/app/requirements.txt
+# Instale dependências do sistema e cron em uma única camada
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    cron \
+    lsb-release \
+    curl \
+    gnupg \
+    && curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/postgresql-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update && apt-get install -y --no-install-recommends postgresql-client-16 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar apenas o arquivo requirements.txt para aproveitar o cache de camadas
+COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
-RUN apt-get update && apt-get install -y cron
-RUN apt-get install lsb-release
-RUN sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-RUN apt-get update
-RUN apt-get -y install postgresql-client-16
 
-COPY . .
+# Copiar o restante dos arquivos
+COPY . /usr/src/app/
 
-# Schedule your script using cron
-#COPY crontab /etc/cron.d/my-crontab
-#RUN chmod 0644 /etc/cron.d/my-crontab
-#RUN crontab /etc/cron.d/my-crontab
-#COPY initcron /etc/cron.d/initcron
-#RUN chmod 0644 /etc/cron.d/initcron
-#RUN crontab /etc/cron.d/initcron
-
-
-
+# Configurar o entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+# Definir o entrypoint padrão
 CMD ["/entrypoint.sh"]

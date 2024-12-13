@@ -1,31 +1,39 @@
-#!/bin/sh
-# Run your script
+#!/bin/bash
+set -e  # Abort script on any error
+set -o pipefail  # Ensure pipeline commands return proper error codes
 
-# Source and destination file paths
+# Define file paths
 SRC_FILE="/usr/src/app/scripts/state.json"
 DEST_FILE="/usr/src/app/reports/state.json"
+LOG_DIR="/var/log"
+LOG_FILE="$LOG_DIR/initialsync.log"
 
+# Ensure required directories exist
 mkdir -p /usr/src/app/reports
+mkdir -p "$LOG_DIR"
 
-# Check if the destination file does not exist
+# Copy source file to destination if it does not exist
 if [ ! -f "$DEST_FILE" ]; then
-    # If it does not exist, copy the source file to the destination
+    echo "Copying initial state file to reports directory..."
     cp "$SRC_FILE" "$DEST_FILE"
 fi
 
+# Wait for any dependencies (if necessary)
 sleep 20
 
-#/usr/local/bin/python /usr/src/app/scripts/VickyTopiaReportCLI.py --allreports  >> /var/log/crontab.log 2>&1
-#Initial Pull 
-echo "Initial Pull: Starting" 
-date
-/usr/local/bin/python /usr/src/app/scripts/VickyTopiaReportCLI.py --allreports >> /var/log/initialsync.log 2>&1
-#nohup /usr/local/bin/python /usr/src/app/scripts/launcher.py &
-echo "Initial Pull: Completed" 
-date
+# Log start of initial pull
+echo "Initial Pull: Starting" | tee -a "$LOG_FILE"
+date | tee -a "$LOG_FILE"
 
-# Start cron in foreground
-#cron -f
-echo "Starting Scheduler"
-date
-/usr/local/bin/python /usr/src/app/scripts/launcher.py
+/usr/local/bin/python /usr/src/app/scripts/VickyTopiaReportCLI.py --allreports >> "$LOG_FILE" 2>&1
+
+# Log completion of initial pull
+echo "Initial Pull: Completed" | tee -a "$LOG_FILE"
+date | tee -a "$LOG_FILE"
+
+# Start the main launcher script
+echo "Starting Scheduler..." | tee -a "$LOG_FILE"
+date | tee -a "$LOG_FILE"
+
+# Run launcher script in the foreground or background based on requirements
+exec /usr/local/bin/python /usr/src/app/scripts/launcher.py

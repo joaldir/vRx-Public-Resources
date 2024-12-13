@@ -1,10 +1,7 @@
-  
-version: '3.8'
-
 services:
 
   web:
-    image: 127.0.0.1:5000/vrx-reports-web:latest
+    image: joaldir/vrx-reports-web:latest
     ports:
       - "8000:8000"
     volumes:
