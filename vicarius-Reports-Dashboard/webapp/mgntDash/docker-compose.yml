@@ -10,13 +10,13 @@ services:
       - ../../app/reports:/usr/src/app/reports
       - ../../app/logs:/var/log
       - /etc/localtime:/etc/localtime:ro
-    secrets:
-      - api_key
-      - dashboard_id
-      - postgres_db
-      - postgres_user
-      - postgres_password
-      - optional_tools
+    environment:
+      API_KEY: ${API_KEY}
+      DASHBOARD_ID: ${DASHBOARD_ID}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      OPTIONAL_TOOLS: ${OPTIONAL_TOOLS}
     networks:
       - vicarius-network
 
