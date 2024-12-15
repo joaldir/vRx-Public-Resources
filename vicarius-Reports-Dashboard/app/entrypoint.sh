@@ -25,7 +25,8 @@ sleep 20
 echo "Initial Pull: Starting" | tee -a "$LOG_FILE"
 date | tee -a "$LOG_FILE"
 
-/usr/local/bin/python /usr/src/app/scripts/VickyTopiaReportCLI.py --allreports >> "$LOG_FILE" 2>&1
+#/usr/local/bin/python /usr/src/app/scripts/VickyTopiaReportCLI.py --allreports >> "$LOG_FILE" 2>&1
+/usr/local/bin/python /usr/src/app/scripts/VickyTopiaReportCLI.py --allreports >> /var/log/initialsync.log 2>&1
 
 # Log completion of initial pull
 echo "Initial Pull: Completed" | tee -a "$LOG_FILE"
