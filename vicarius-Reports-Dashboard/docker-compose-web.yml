@@ -23,3 +23,5 @@ services:
 networks:
   vicarius-network:
     attachable: true
+    driver_opts: 
+      com.docker.network.driver.mtu: 1460
