@@ -23,17 +23,3 @@ services:
 networks:
   vicarius-network:
     attachable: true
-
-secrets:
-  api_key:
-    external: true
-  dashboard_id:
-    external: true
-  postgres_db:
-    external: true
-  postgres_user:
-    external: true
-  postgres_password:
-    external: true
-  optional_tools:
-    external: true
