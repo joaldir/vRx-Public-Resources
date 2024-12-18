@@ -19,6 +19,8 @@ services:
       - "traefik.http.routers.metabase.entrypoints=web,websecure"
       - "traefik.http.routers.metabase.rule=Host(`srvvicdash.br-atacadao.corp`)"
       - "traefik.http.routers.metabase.tls=true"
+    expose:
+      - "3000"
     networks:
       - vicarius-reports-dashboard_vicarius-network
     deploy:
