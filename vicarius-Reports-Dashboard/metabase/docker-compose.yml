@@ -21,16 +21,15 @@ services:
       - "traefik.http.routers.metabase.tls=true"
       - "traefik.http.routers.metabase.tls.certresolver=prod"
     networks:
-      - vicarius-reports-dashboard_vicarius-network
+      - vicarius-network
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
 
 networks:
-  vicarius-reports-dashboard_vicarius-network:
-    driver: bridge
-    attachable: true
+  vicarius-network:
+    external: true
 
 volumes:
   metabase-data:
