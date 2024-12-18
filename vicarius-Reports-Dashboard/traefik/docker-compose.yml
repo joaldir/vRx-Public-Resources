@@ -28,6 +28,7 @@ services:
 networks:
   vicarius-reports-dashboard_vicarius-network:
     external: true
+    
 #volumes:
 #  traefik-ssl-certs:
 #    driver: local
